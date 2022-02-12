@@ -12,7 +12,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<!-- Bootstrap CSS -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-
+		<link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
 	<title>Hello, world!</title>
 </head>
 
@@ -43,7 +43,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 									aria-label="Close"></button>
 							</div>
 							<div class="modal-body">
-								<form action="" method="post">
+								<form action="" method="post" id="form">
 									
 										<label for="">Name</label>
 										<input type="text" id="name"  class="form-control" value="">
@@ -88,6 +88,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	</script>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"
 		integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 		<script>
 			$(document).on("click","#add",function (e){
 				e.preventDefault();
@@ -104,10 +105,87 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				  },
 				 success: function(data){
 					 console.log(data);
+					 $('#exampleModal').modal('hide');
+					  // fermer model apres ajouter un data
+                      if(data.message=="Success"){
+						toastr["success"](data.message)
+						toastr.options = {
+						"closeButton": true,
+						"debug": false,
+						"newestOnTop": false,
+						"progressBar": true,
+						"positionClass": "toast-top-right",
+						"preventDuplicates": false,
+						"onclick": null,
+						"showDuration": "300",
+						"hideDuration": "1000",
+						"timeOut": "5000",
+						"extendedTimeOut": "1000",
+						"showEasing": "swing",
+						"hideEasing": "linear",
+						"showMethod": "fadeIn",
+						"hideMethod": "fadeOut"
+						}
+					  }
+					  else{
+						 toastr["error"](data.message)
+
+							toastr.options = {
+							"closeButton": true,
+							"debug": false,
+							"newestOnTop": false,
+							"progressBar": true,
+							"positionClass": "toast-top-right",
+							"preventDuplicates": false,
+							"onclick": null,
+							"showDuration": "300",
+							"hideDuration": "1000",
+							"timeOut": "5000",
+							"extendedTimeOut": "1000",
+							"showEasing": "swing",
+							"hideEasing": "linear",
+							"showMethod": "fadeIn",
+							"hideMethod": "fadeOut"
+							}
+					  }
+					 
+					
 				 }
+			
 			  });
-			})
-		</script>
+			  $('#form')[0].reset(); // clear the inputs after insert data
+			
+			});
+			function fetch(){
+				$.ajax({
+            url :"<?php echo base_url(); ?>fetch",
+			type: "post",
+			dataType:"json", 
+			
+			success: function(data){
+                 var tbody="";
+				 for(var key in data){
+					tbody+="<tr>";
+					tbody+="<td>"+data[key]['id']+"<td>";
+					tbody+="<td>"+data[key]['name']+"<td>";
+					tbody+="<td>"+data[key]['email']+"<td>";
+					tbody+="<td>"+data[key]['email']+"<td>";
+					tbody+="<td>"
+
+					tbody+="<tr>";
+
+				 }
+			}
+
+				});
+				    
+			 }
+			fetch();
+			</script>
+			
+			
+			
+		
 
 	<!-- Option 2: Separate Popper and Bootstrap JS -->
 	<!--

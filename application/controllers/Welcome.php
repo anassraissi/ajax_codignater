@@ -23,6 +23,7 @@ class Welcome extends CI_Controller {
 	  {
 		  parent::__construct();
 		  $this->load->helper(array('form', 'url'));
+		  $this->load->model('crud_model');
 
 		$this->load->library('form_validation');
 	  }
@@ -40,15 +41,20 @@ class Welcome extends CI_Controller {
 		{
 
 			$this->form_validation->set_rules('name', 'name', 'required');
-			$this->form_validation->set_rules('email', 'email', 'required');
+			$this->form_validation->set_rules('email', 'email', 'required|valid_email');
 				if ($this->form_validation->run() == false){
 					$data =array('responce'=>'error','message'=>validation_errors());
 				}
 				else{
 					$ajax_data=$this->input->post();
-					
-					
-				  $data =array('response'=>'success','message'=>$ajax_data);
+					if($this->crud_model->insert_entry($ajax_data)){
+						$data =array('response'=>'Success','message'=>'data inserted sucssesfly');
+
+					}
+					else{
+						$data =array('response'=>'errors','message'=>'data failed to insert');
+
+					}
 
 				} 	
 
@@ -58,4 +64,13 @@ class Welcome extends CI_Controller {
 		echo json_encode($data);
 		
 	}
+	public function fetch(){
+						if($this->input->is_ajax_request()){
+						$posts=$this->crud_model->get_entry();
+						echo json_encode($posts);
+						}
+					
+		}
+		
+
 }

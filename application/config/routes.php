@@ -54,4 +54,6 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 $route['/'] = 'Welcome';
 $route['insert'] = 'Welcome/insert';
+$route['fetch'] = 'Welcome/fetch';
+
 
