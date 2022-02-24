@@ -98,6 +98,38 @@ class Welcome extends CI_Controller
         
           echo json_encode($data);   // bach nban liya resultat flconsole
     }
+    public function update()
+    {
+        
+        if ($this->input->is_ajax_request()) {
+            $this->form_validation->set_rules('name', 'name', 'required');
+            $this->form_validation->set_rules('email', 'email', 'required|valid_email');
+            if ($this->form_validation->run() == true) {
+                $data =array('responce'=>'error','message'=>validation_errors());
+            } 
+            else {
+                $data['id']=$this->input->post('edit_id');
+                $data['name']=$this->input->post('edit_name');
+                $data['email']=$this->input->post('edit_email');
+                // echo $data;
+                if($this->crud_model->update_entry($data)){
+                    $data =array('response'=>'Success','message'=>'data updated sucssesfly');
+                }
+                else
+                {
+                    $data =array('response'=>'error','message'=>'updating failled');
+                }
+            }
+                
+        }
+
+        else {
+            echo "No direct script access allowed";
+        }
+        echo json_encode($data);
+      
+        
+        }
   
 }
 

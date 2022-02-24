@@ -7,14 +7,6 @@ class crud_model extends CI_Model {
            return $this->db->insert('crud', $data);
     }
 
-    public function update_entry()
-    {
-            $this->title    = $_POST['title'];
-            $this->content  = $_POST['content'];
-            $this->date     = time();
-
-            $this->db->update('entries', $this, array('id' => $_POST['id']));
-    }
     public function get_entry()
     {
           $row=$this->db->get('crud');
@@ -40,6 +32,9 @@ class crud_model extends CI_Model {
             }
 
            }
-
+           public function update_entry($data){
+           return $this->db->update('crud',$data, array('id'=> $data['id']));
+            
+           }
 }
 ?>

@@ -13,15 +13,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 	<link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
-	<title>Hello, world!</title>
+	<link https="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+		<title>Hello, world!</title>
 </head>
 
 <body>
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12 my-2">
+
 				<h1 style="text-align:centre;">ajax_crud_codignater</h1>
+
 				<hr style="background-color:black;color :white; height:2px;">
+				
+
+				
 			</div>
 		</div>
 		<div class="row">
@@ -47,7 +53,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 									<label for="">Name</label>
 									<input type="text" id="name" class="form-control" value="">
-
+									
 
 									<label for="Email">Email</label>
 									<input type="email" id="email" class="form-control">
@@ -75,12 +81,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							<div class="modal-body">
 								<form action="" method="post" id="edit_form">
                                    <input type="hidden" id="edit_id" value=""> 
-									<label for="">Name</label>
-									<input type="text" id="edit_name" class="form-control" value="">
-
-
-									<label for="Email">Email</label>
-									<input type="email" id="edit_email" class="form-control" value="">
+									<label for="edit_name">Name</label>
+									<input type="text" id="edit_name" class="form-control" value="" name="edit_name">
+									<label for="edit_email">Email</label>
+									<input type="email" id="edit_email" class="form-control" value="" name="edit_email">
 
 								</form>
 							</div>
@@ -121,6 +125,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	</script>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"
 		integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 	<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -130,7 +135,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			var name = $("#name").val();
 			var email = $("#email").val();
 			// alert(email);
-			$.ajax({
+			if(name=="" || email ==""){
+			     alert('both fields are required');
+			}
+			else{
+				$.ajax({
 				url: "<?php echo base_url();?>insert",
 				type: "post",
 				dataType: "json",
@@ -139,7 +148,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					email: email
 				},
 				success: function (data) {
-					console.log(data);
+				
 					$('#exampleModal').modal('hide');
 					fetch();
 
@@ -189,6 +198,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				}
 
 			});
+			}
+		
 			$('#form')[0].reset(); // clear the inputs after insert data
 
 		});
@@ -207,8 +218,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						tbody += "<td>" + data[key]['name'] + "</td>";
 						tbody += "<td>" + data[key]['email'] + "</td>";
 						tbody += `<td>
-					<a href="#" id="del" value="${data[key]['id']}">Delete</a>
-					<a href="#" id="edit" value="${data[key]['id']}">Edit</a>
+					<a href="#" id="del" value="${data[key]['id']}" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-alt" aria-hidden="true"></i>
+</a>
+					<a href="#" id="edit" value="${data[key]['id']}" class="btn btn-sm btn-outline-success"><i class="fas fa-edit" aria-hidden="true"></i></a>
 
 					</td>`;
 						tbody += "</tr>";
@@ -328,6 +340,80 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			          });
 			}
 		});
+
+		$(document).on("click", "#Update", function (e) {
+            e.preventDefault();
+             var edit_id=$('#edit_id').val();
+			 var edit_name=$('#edit_name').val();
+             var edit_email=$("#edit_email").val();
+			 if(edit_id=="" || edit_name=="" ||edit_email=="")
+			 {
+				 alert("all field are required");
+			 }
+			 else{
+				 $.ajax({
+                url: "<?php echo base_url()?>update",
+				type:"Post",
+				dataType:"json",
+				data : {
+					edit_id: edit_id,
+					edit_name: edit_name,
+					edit_email: edit_email
+				},
+				success: function (data) {
+					if(data.response=="Success"){
+						fetch();
+						$('#editModal').modal('hide');
+						toastr["success"](data.message)
+
+										toastr.options = {
+											"closeButton": true,
+											"debug": false,
+											"newestOnTop": false,
+											"progressBar": true,
+											"positionClass": "toast-top-right",
+											"preventDuplicates": false,
+											"onclick": null,
+											"showDuration": "300",
+											"hideDuration": "1000",
+											"timeOut": "5000",
+											"extendedTimeOut": "1000",
+											"showEasing": "swing",
+											"hideEasing": "linear",
+											"showMethod": "fadeIn",
+											"hideMethod": "fadeOut"
+										}
+
+					}
+					else{
+						toastr["error"](data.message)
+
+							toastr.options = {
+								"closeButton": true,
+								"debug": false,
+								"newestOnTop": false,
+								"progressBar": true,
+								"positionClass": "toast-top-right",
+								"preventDuplicates": false,
+								"onclick": null,
+								"showDuration": "300",
+								"hideDuration": "1000",
+								"timeOut": "5000",
+								"extendedTimeOut": "1000",
+								"showEasing": "swing",
+								"hideEasing": "linear",
+								"showMethod": "fadeIn",
+								"hideMethod": "fadeOut"
+							}
+												}
+					}
+				
+				 });
+			 }
+
+
+        });
+
 	</script>
 
 	<!-- Option 2: Separate Popper and Bootstrap JS -->

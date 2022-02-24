@@ -57,6 +57,7 @@ $route['insert'] = 'Welcome/insert';
 $route['fetch'] = 'Welcome/fetch';
 $route['delete'] = 'Welcome/delete';
 $route['edit'] = 'Welcome/edit';
+$route['update'] = 'Welcome/update';
 
 
 
